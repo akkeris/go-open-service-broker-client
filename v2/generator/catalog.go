@@ -23,7 +23,7 @@ import (
 
 	"sort"
 
-	v2 "github.com/kubernetes-sigs/go-open-service-broker-client/v2"
+	v2 "github.com/akkeris/go-open-service-broker-client/v2"
 	"k8s.io/klog"
 )
 
