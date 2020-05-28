@@ -43,16 +43,10 @@ type Service struct {
 	// Bindable represents whether a service is bindable. May be overridden
 	// on a per-plan basis by the Plan.Bindable field.
 	Bindable bool `json:"bindable"`
-	// InstancesRetrievable is ALPHA and may change or disappear at any time.
-	// InstancesRetrievable will only be provided if alpha features are enabled.
-	//
 	// InstancesRetrievable represents whether fetching a service instances via a
 	// GET on the service instance resource's endpoint
 	// (/v2/service_instances/instance-id) is supported for all plans.
 	InstancesRetrievable bool `json:"instances_retrievable,omitempty"`
-	// BindingsRetrievable is ALPHA and may change or disappear at any time.
-	// BindingsRetrievable will only be provided if alpha features are enabled.
-	//
 	// BindingsRetrievable represents whether fetching a service binding via a
 	// GET on the binding resource's endpoint
 	// (/v2/service_instances/instance-id/service_bindings/binding-id) is
@@ -63,6 +57,10 @@ type Service struct {
 	// a mistake that has become written into the API for backward
 	// compatibility reasons and is intentional. Optional; defaults to false.
 	PlanUpdatable *bool `json:"plan_updateable,omitempty"`
+	// AllowContextUpdates represents if a Service instance supports Update
+	// requests when contextual data for the Service Instance in the Platform
+	// changes.
+	AllowContextUpdates bool `json:"allow_context_updates"`
 	// Plans is the list of the Plans for a service. Plans represent
 	// different tiers.
 	Plans []Plan `json:"plans"`
@@ -102,6 +100,20 @@ type Plan struct {
 	// Bindable indicates whether the plan is bindable and overrides the value
 	// of the Service.Bindable field if set. Optional; defaults to unset.
 	Bindable *bool `json:"bindable,omitempty"`
+	// PlanUpdateable represents if a Plan supports upgrade, downgrades or
+	// sidegrades to another version.
+	//
+	// OPTIONAL - if specified this takes precidence over the bindable
+	// attribute of the Service. If not set it's derived from the Service
+	PlanUpdateable *bool `json:"plan_updateable"`
+	// MaximumPollingDuration represents the maximum time the Platform
+	// should poll, If maximum polling duration is reached the Platform should
+	// stop polling and operation considered failed.
+	MaximumPollingDuration *int32 `json:"maximum_polling_duration"`
+	// MaintenanceInfo represents the maintenance info for a Plan. If
+	// provided a version string MUST be supplied and platforms MAY
+	// use when Provisioning or Updating a Service instance.
+	MaintenanceInfo *MaintenanceInfo `json:"maintenance_info"`
 	// Metadata is a blob of information about the plan, meant to be user-
 	// facing content and display instructions. Metadata may contain
 	// platform-conventional values. Optional.
@@ -112,6 +124,18 @@ type Plan struct {
 	// the expected parameters for creation and update of instances and
 	// creation of bindings.
 	Schemas *Schemas `json:"schemas,omitempty"`
+}
+
+// MaintenanceInfo is used to determine if a maintenance update is available for
+// a Service Instance.
+type MaintenanceInfo struct {
+	// Version represents a semantic version 2.0 to signify
+	// the version of maintenance update
+	Version *string `json:"version"`
+	// Description describes the impact of the maintenance update, ex: version changes,
+	// config changes, etc. The Platform MAY present this to the user before they
+	// trigger the maintenance update.
+	Description *string `json:"description"`
 }
 
 // Schemas requires a client API version >=2.13.
@@ -202,6 +226,13 @@ type ProvisionRequest struct {
 	// Parameters is a set of configuration options for the service instance.
 	// Optional.
 	Parameters map[string]interface{} `json:"parameters,omitempty"`
+	// MaintenanceInfo represents maintenance information supplied by the
+	// Service Plan from the catalog. This can be used to ensure that the Platform
+	// Provisioning an expected Service Plan. If the Service brokers catalog
+	// has changed and new maintenance information version is available for the
+	// Service Plan being provisioned, then the Service broker MUST reject the
+	// request with a 422 Unprocessable Entity.
+	MaintenanceInfo *MaintenanceInfo `json:"maintenance_info"`
 	// Context requires a client API version >= 2.12.
 	//
 	// Context is platform-specific contextual information under which the
@@ -380,7 +411,7 @@ type GetInstanceResponse struct {
 	PlanID string `json:"plan_id"`
 	// DashboardURL is the URL of a web-based management user interface for
 	// the service instance.
-	DashboardURL string `json:"dashboard_url,omitempty"`
+	DashboardURL *string `json:"dashboard_url,omitempty"`
 	// Parameters is a set of configuration options for the instance.
 	Parameters map[string]interface{} `json:"parameters,omitempty"`
 }
@@ -514,10 +545,6 @@ type BindResource struct {
 
 // BindResponse represents a broker's response to a BindRequest.
 type BindResponse struct {
-	// Async is an ALPHA API attribute and may change. Alpha
-	// features must be enabled and the client must be using the
-	// latest API Version in order to use this.
-	//
 	// Async indicates whether the broker is handling the bind request
 	// asynchronously.
 	Async bool `json:"async"`
@@ -537,10 +564,6 @@ type BindResponse struct {
 	// CF-specific. May only be supplied by a service that declares a
 	// requirement for the 'volume_mount' permission.
 	VolumeMounts []interface{} `json:"volume_mounts,omitempty"`
-	// OperationKey is an ALPHA API attribute and may change. Alpha
-	// features must be enabled and the client must be using the
-	// latest API Version in order to use this.
-	//
 	// OperationKey is an extra identifier supplied by the broker to identify
 	// asynchronous operations.
 	OperationKey *OperationKey `json:"operation,omitempty"`

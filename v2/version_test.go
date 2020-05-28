@@ -21,8 +21,23 @@ import (
 )
 
 func TestAtLeast(t *testing.T) {
+	v2_15 := Version2_15()
+	v2_14 := Version2_14()
+	v2_13 := Version2_13()
 	v2_12 := Version2_12()
 	v2_11 := Version2_11()
+
+	if !v2_15.AtLeast(v2_14) {
+		t.Error("Expected 2.15 >= 2.14")
+	}
+
+	if !v2_14.AtLeast(v2_13) {
+		t.Error("Expected 2.14 >= 2.13")
+	}
+
+	if !v2_13.AtLeast(v2_12) {
+		t.Error("Expected 2.13 >= 2.12")
+	}
 
 	if !v2_12.AtLeast(v2_11) {
 		t.Error("Expected 2.12 >= 2.11")
@@ -35,7 +50,7 @@ func TestAtLeast(t *testing.T) {
 
 func TestLatestAPIVersion(t *testing.T) {
 
-	if LatestAPIVersion() != Version2_13() {
-		t.Error("Unexpected Latest API Version--expected 2.13")
+	if LatestAPIVersion() != Version2_15() {
+		t.Error("Unexpected Latest API Version--expected 2.15")
 	}
 }

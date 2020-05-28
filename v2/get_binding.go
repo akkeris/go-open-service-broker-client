@@ -22,12 +22,6 @@ import (
 )
 
 func (c *client) GetBinding(r *GetBindingRequest) (*GetBindingResponse, error) {
-	if err := c.validateAlphaAPIMethodsAllowed(); err != nil {
-		return nil, GetBindingNotAllowedError{
-			reason: err.Error(),
-		}
-	}
-
 	fullURL := fmt.Sprintf(bindingURLFmt, c.URL, r.InstanceID, r.BindingID)
 
 	response, err := c.prepareAndDo(http.MethodGet, fullURL, nil /* params */, nil /* request body */, nil /* originating identity */)

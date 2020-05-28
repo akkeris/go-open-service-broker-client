@@ -265,20 +265,6 @@ func TestBind(t *testing.T) {
 			},
 			expectedResponse: successBindResponse(),
 		},
-		{
-			name:               "async with alpha features disabled",
-			version:            LatestAPIVersion(),
-			enableAlpha:        false,
-			request:            defaultAsyncBindRequest(),
-			expectedErrMessage: "Asynchronous binding operations are not allowed: alpha API methods not allowed: alpha features must be enabled",
-		},
-		{
-			name:               "async with unsupported API version",
-			version:            Version2_12(),
-			enableAlpha:        true,
-			request:            defaultAsyncBindRequest(),
-			expectedErrMessage: "Asynchronous binding operations are not allowed: alpha API methods not allowed: must have latest API Version. Current: 2.12, Expected: 2.13",
-		},
 	}
 
 	for _, tc := range cases {
@@ -297,7 +283,7 @@ func TestBind(t *testing.T) {
 		}
 
 		if tc.version.label == "" {
-			tc.version = Version2_11()
+			tc.version = Version2_15()
 		}
 
 		klient := newTestClient(t, tc.name, tc.version, tc.enableAlpha, tc.httpChecks, tc.httpReaction)

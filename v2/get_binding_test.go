@@ -98,17 +98,6 @@ func TestGetBinding(t *testing.T) {
 			},
 			expectedErr: testHTTPStatusCodeError(),
 		},
-		{
-			name:               "alpha features disabled",
-			enableAlpha:        false,
-			expectedErrMessage: "GetBinding not allowed: alpha API methods not allowed: alpha features must be enabled",
-		},
-		{
-			name:        "unsupported API version",
-			enableAlpha: true,
-			APIVersion:  Version2_11(),
-			expectedErr: testGetBindingNotAllowedErrorUnsupportedAPIVersion(),
-		},
 	}
 
 	for _, tc := range cases {

@@ -165,7 +165,7 @@ const schemaCatalogBytes = `{
       	"service_instance": {
 	  	  "create": {
 	  	  	"parameters": {
-	  		  "foo": "bar"	
+	  		  "foo": "bar"
 	  	  	}
 	  	  },
 	  	  "update": {

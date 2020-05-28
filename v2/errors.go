@@ -111,6 +111,8 @@ const (
 	AppGUIDRequiredErrorDescription = "This service supports generation of credentials through binding an application only."
 	ConcurrencyErrorMessage         = "ConcurrencyError"
 	ConcurrencyErrorDescription     = "The Service Broker does not support concurrent requests that mutate the same resource."
+	MaintenanceInfoErrorMessage     = "MaintenanceInfoConflict"
+	MaintenanceInfoErrorDescription = "The maintenance info version does not match the Service Broker value."
 )
 
 // IsAsyncRequiredError returns whether the error corresponds to the
@@ -183,6 +185,30 @@ func IsConcurrencyError(err error) bool {
 	}
 
 	return *statusCodeError.Description == ConcurrencyErrorDescription
+}
+
+// IsConcurrencyError returns whether the error corresponds to the
+// conventional way of indicating that a service broker does not support
+// concurrent requests to modify the same resource
+func IsMaintenanceInfoError(err error) bool {
+	statusCodeError, ok := err.(HTTPStatusCodeError)
+	if !ok {
+		return false
+	}
+
+	if statusCodeError.StatusCode != http.StatusUnprocessableEntity {
+		return false
+	}
+
+	if statusCodeError.ErrorMessage == nil || statusCodeError.Description == nil {
+		return false
+	}
+
+	if *statusCodeError.ErrorMessage != MaintenanceInfoErrorMessage {
+		return false
+	}
+
+	return *statusCodeError.Description == MaintenanceInfoErrorDescription
 }
 
 // AlphaAPIMethodsNotAllowedError is an error type signifying that alpha API

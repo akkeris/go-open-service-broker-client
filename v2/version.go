@@ -41,7 +41,7 @@ func (v APIVersion) String() string {
 // LatestAPIVersion returns the latest supported API version in the current
 // release of this library.
 func LatestAPIVersion() APIVersion {
-	return Version2_13()
+	return Version2_15()
 }
 
 // APIVersions returns a list of the APIVersions supported by this library, with
@@ -51,6 +51,8 @@ func APIVersions() []APIVersion {
 		Version2_11(),
 		Version2_12(),
 		Version2_13(),
+		Version2_14(),
+		Version2_15(),
 	}
 }
 
@@ -66,6 +68,14 @@ const (
 	// internalAPIVersion2_13 represents the 2.13 version of the Open Service
 	// Broker API.
 	internalAPIVersion2_13 = "2.13"
+
+	// internalAPIVersion2_13 represents the 2.13 version of the Open Service
+	// Broker API.
+	internalAPIVersion2_14 = "2.14"
+
+	// internalAPIVersion2_13 represents the 2.13 version of the Open Service
+	// Broker API.
+	internalAPIVersion2_15 = "2.15"
 )
 
 //Version2_11 returns an APIVersion struct with the internal API version set to "2.11"
@@ -81,4 +91,14 @@ func Version2_12() APIVersion {
 //Version2_13 returns an APIVersion struct with the internal API version set to "2.13"
 func Version2_13() APIVersion {
 	return APIVersion{label: internalAPIVersion2_13, order: 2}
+}
+
+//Version2_13 returns an APIVersion struct with the internal API version set to "2.14"
+func Version2_14() APIVersion {
+	return APIVersion{label: internalAPIVersion2_14, order: 3}
+}
+
+//Version2_13 returns an APIVersion struct with the internal API version set to "2.15"
+func Version2_15() APIVersion {
+	return APIVersion{label: internalAPIVersion2_15, order: 4}
 }

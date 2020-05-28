@@ -96,17 +96,6 @@ func TestGetInstance(t *testing.T) {
 			},
 			expectedErr: testHTTPStatusCodeError(),
 		},
-		{
-			name:               "alpha features disabled",
-			enableAlpha:        false,
-			expectedErrMessage: "GetInstance not allowed: alpha API methods not allowed: alpha features must be enabled",
-		},
-		{
-			name:        "unsupported API version",
-			enableAlpha: true,
-			APIVersion:  Version2_11(),
-			expectedErr: testGetInstanceNotAllowedErrorUnsupportedAPIVersion(),
-		},
 	}
 
 	for _, tc := range cases {

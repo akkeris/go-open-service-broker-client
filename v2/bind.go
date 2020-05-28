@@ -47,14 +47,6 @@ const (
 )
 
 func (c *client) Bind(r *BindRequest) (*BindResponse, error) {
-	if r.AcceptsIncomplete {
-		if err := c.validateAlphaAPIMethodsAllowed(); err != nil {
-			return nil, AsyncBindingOperationsNotAllowedError{
-				reason: err.Error(),
-			}
-		}
-	}
-
 	if err := validateBindRequest(r); err != nil {
 		return nil, err
 	}
