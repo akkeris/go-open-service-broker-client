@@ -24,7 +24,8 @@ import (
 
 const okInstanceBytes = `{
   "service_id": "test-service",
-  "plan_id": "test-plan"
+  "plan_id": "test-plan",
+  "dashboard_url": "https://example.com/dashboard"
 }`
 
 func defaultGetInstanceRequest() *GetInstanceRequest {
@@ -35,8 +36,9 @@ func defaultGetInstanceRequest() *GetInstanceRequest {
 
 func okGetInstanceResponse() *GetInstanceResponse {
 	response := &GetInstanceResponse{
-		ServiceID: "test-service",
-		PlanID:    "test-plan",
+		ServiceID:    "test-service",
+		PlanID:       "test-plan",
+		DashboardURL: strPtr("https://example.com/dashboard"),
 	}
 	return response
 }
