@@ -543,6 +543,12 @@ type BindResource struct {
 	Route   *string `json:"route,omitempty"`
 }
 
+type Endpoint struct {
+	Host     *string  `json:"hosts"`
+	Ports    []string `json:"ports"`
+	Protocol *string  `json:"protocol"`
+}
+
 // BindResponse represents a broker's response to a BindRequest.
 type BindResponse struct {
 	// Async indicates whether the broker is handling the bind request
@@ -564,6 +570,9 @@ type BindResponse struct {
 	// CF-specific. May only be supplied by a service that declares a
 	// requirement for the 'volume_mount' permission.
 	VolumeMounts []interface{} `json:"volume_mounts,omitempty"`
+	// Endpoints is an array of network endpoints that the application uses
+	// to connect to the service
+	Endpoints []Endpoint `json:"endpoints,omitempty"`
 	// OperationKey is an extra identifier supplied by the broker to identify
 	// asynchronous operations.
 	OperationKey *OperationKey `json:"operation,omitempty"`
@@ -642,4 +651,7 @@ type GetBindingResponse struct {
 	VolumeMounts []interface{} `json:"volume_mounts,omitempty"`
 	// Parameters is configuration parameters for the binding.
 	Parameters map[string]interface{} `json:"parameters,omitempty"`
+	// Endpoints is an array of network endpoints that the application uses
+	// to connect to the service
+	Endpoints []Endpoint `json:"endpoints,omitempty"`
 }
